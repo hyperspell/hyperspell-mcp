@@ -1,70 +1,33 @@
-# Hyperspell MCP Server
 
-A custom MCP server
 
-This is a TypeScript-based MCP server that implements a simple notes system. It demonstrates core MCP concepts by providing:
-
-- Resources representing text notes with URIs and metadata
-- Tools for creating new notes
-- Prompts for generating summaries of notes
-
-## Features
-
-### Resources
-- List and access notes via `note://` URIs
-- Each note has a title, content and metadata
-- Plain text mime type for simple content access
-
-### Tools
-- `create_note` - Create new text notes
-  - Takes title and content as required parameters
-  - Stores note in server state
-
-### Prompts
-- `summarize_notes` - Generate a summary of all stored notes
-  - Includes all note contents as embedded resources
-  - Returns structured prompt for LLM summarization
-
-## Development
-
-Install dependencies:
-```bash
-yarn install
-```
-
-Build the server:
-```bash
-yarn run build
-```
-
-For development with auto-rebuild:
-```bash
-yarn run watch
-```
-
-## Installation
-
-To use with Claude Desktop, add the server config:
-
-On MacOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
-On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
+## Claude Desktop
 
 ```json
 {
   "mcpServers": {
     "Hyperspell": {
-      "command": "/path/to/Hyperspell/build/index.js"
+      "command": "/Users/manu/.local/bin/uv",
+      "args": [
+        "run",
+        "--with",
+        "hyperspell",
+        "--with",
+        "mcp[cli]",
+        "mcp",
+        "run",
+        "/Users/manu/hyperspell/mcp/hyperspell-mcp/server.py"
+      ],
+      "env": {
+        "HYPERSPELL_TOKEN": "<app or user token>",
+        "USE_RESOURCES": "false"
+      }
     }
   }
 }
 ```
 
-### Debugging
+## Using the inspector
 
-Since MCP servers communicate over stdio, debugging can be challenging. We recommend using the [MCP Inspector](https://github.com/modelcontextprotocol/inspector), which is available as a package script:
-
-```bash
-yarn run inspector
 ```
-
-The Inspector will provide a URL to access debugging tools in your browser.
+USE_RESOURCES=true HYPERSPELL_TOKEN="..." uv run mcp dev hyperspell-mcp/server.py
+```
