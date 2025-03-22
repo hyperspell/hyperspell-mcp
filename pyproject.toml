@@ -1,5 +1,5 @@
 [project]
-name = "hyperspell-mcp"
+name = "hyperspell_mcp"
 version = "0.1.0"
 description = "Hyperspell MCP Server"
 readme = "README.md"

@@ -1,11 +1,11 @@
 # server.py
 import os
-from dataclasses import dataclass
-from typing import Callable, Self, Sequence, overload
+from typing import Callable
 
 from hyperspell import Hyperspell
 from mcp.server.fastmcp import FastMCP
-from pydantic import BaseModel as PydanticBaseModel
+
+from hyperspell_mcp.types import Collection, Document
 
 token = os.getenv("HYPERSPELL_TOKEN")
 
@@ -34,47 +34,6 @@ def tool_or_resource(uri: str, name: str | None = None):
         return fn
 
     return decorator
-
-
-@dataclass
-class BaseModel:
-    @overload
-    @classmethod
-    def from_pydantic(cls, model: PydanticBaseModel) -> Self: ...
-
-    @overload
-    @classmethod
-    def from_pydantic(cls, model: Sequence[PydanticBaseModel]) -> list[Self]: ...
-
-    @classmethod
-    def from_pydantic(
-        cls, model: PydanticBaseModel | Sequence[PydanticBaseModel]
-    ) -> Self | list[Self]:
-        if isinstance(model, Sequence):
-            return [cls.from_pydantic(m) for m in model]
-
-        data = model.model_dump()
-        # Only select the keys in data that are part of this data class
-        data = {key: value for key, value in data.items() if key in cls.__annotations__}
-        return cls(**data)
-
-
-@dataclass
-class Collection(BaseModel):
-    name: str
-    documents_count: int = 0
-
-
-@dataclass
-class Document(BaseModel):
-    id: int
-    source: str
-    resource_id: str
-    title: str | None
-    created_at: str
-    collection: str
-    type: str
-    data: dict | None
 
 
 @tool_or_resource("collection://", name="List Collections")
