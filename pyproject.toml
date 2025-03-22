@@ -8,3 +8,14 @@ dependencies = [
     "hyperspell>=0.5.3",
     "mcp[cli]>=1.4.1",
 ]
+
+[[project.authors]]
+name = "Manu Ebert"
+email = "manu@hyperspell.com"
+
+[project.scripts]
+server = "hyperspell_mcp.server:main"
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
