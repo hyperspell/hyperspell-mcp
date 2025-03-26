@@ -112,7 +112,7 @@ wheels = [
 
 [[package]]
 name = "hyperspell"
-version = "0.5.3"
+version = "0.8.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "anyio" },
@@ -122,9 +122,9 @@ dependencies = [
     { name = "sniffio" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/60/6f/e7693bb4779ea1366ca71c9db18549f18a3540bf9c3637f3e2f336e0f14a/hyperspell-0.5.3.tar.gz", hash = "sha256:df9b805f9e604c0985d827dfaea59387dbcc899adfafd22bb9b68baff04bd650", size = 96080 }
+sdist = { url = "https://files.pythonhosted.org/packages/2f/e3/e4c9c2aae77a2d13dad1adfa26bd5fd99b3de3342ff57097f979b4fa723f/hyperspell-0.8.1.tar.gz", hash = "sha256:4c880be9d5a8dd2002ccf73bb0975dad750a3e8770e85e7473eb897b7f199e77", size = 98382 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/3d/f3/bc9a2372b12008c13dc87c9815d7edc5408c86419f01b189ddbe9e1fb58a/hyperspell-0.5.3-py3-none-any.whl", hash = "sha256:b8365bec0f15594a37d0bdee572a67de7ba7fae2189c8d044668ff46db8543f4", size = 84051 },
+    { url = "https://files.pythonhosted.org/packages/50/7d/8f214b9839f2d61c7eca973269cb8a2be745c35327e6eb89ce44889899d5/hyperspell-0.8.1-py3-none-any.whl", hash = "sha256:7d8871383a9917c516c6ec18c615326cb1fc3fe5d0c7f99323630200dd9aa7ae", size = 84578 },
 ]
 
 [[package]]
@@ -138,7 +138,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "hyperspell", specifier = ">=0.5.3" },
+    { name = "hyperspell", specifier = ">=0.8.1" },
     { name = "mcp", extras = ["cli"], specifier = ">=1.4.1" },
 ]
 

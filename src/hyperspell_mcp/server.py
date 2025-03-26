@@ -108,10 +108,10 @@ def get_document(document_id: int) -> Document:
 
 
 @mcp.tool()
-def query(query: str, collections: list[str]) -> Document:
+def query(query: str, collection: str | None = None) -> list[Document]:
     """Search Hyperspell for documents and data"""
-    r = mcp.api.query.search(query=query, collections=collections)
-    return Document.from_pydantic(r)
+    r = mcp.api.query.search(query=query, collections=collection)
+    return Document.from_pydantic(r.documents)
 
 
 def main():

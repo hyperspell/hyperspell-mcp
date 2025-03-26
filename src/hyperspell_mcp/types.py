@@ -37,10 +37,6 @@ class Collection(BaseModel):
 @dataclass
 class Document(BaseModel):
     id: int
-    source: str
-    resource_id: str
-    title: str | None
-    created_at: str
-    collection: str
+    title: str
     type: str
-    data: dict | None
+    summary: str
