@@ -40,3 +40,16 @@ class Document(BaseModel):
     title: str
     type: str
     summary: str
+
+
+@dataclass
+class DocumentStatus(BaseModel):
+    id: int
+    status: str
+    collection: str
+
+
+@dataclass
+class Error(BaseModel):
+    error: str
+    message: str

@@ -2,15 +2,15 @@
 import logging
 import os
 import sys
-from typing import Callable
+from typing import Callable, Literal
 
 import anyio
 from dotenv import load_dotenv
-from hyperspell import Hyperspell
+from hyperspell import APIError, Hyperspell
 from mcp.server.fastmcp import FastMCP
 from pydantic import BaseModel, Field, field_validator
 
-from hyperspell_mcp.types import Collection, Document
+from hyperspell_mcp.types import Collection, Document, DocumentStatus, Error
 
 logger = logging.getLogger("hyperspell_mcp")
 
@@ -82,6 +82,14 @@ class HyperspellMCPServer(FastMCP):
 
         return decorator
 
+    async def log(
+        self, message: str, level: Literal["info", "warning", "error"] = "info"
+    ):
+        await self._mcp_server.request_context.session.send_log_message(
+            level=level,
+            data=message,
+        )
+
 
 mcp = HyperspellMCPServer(config=ServerConfig.from_env())
 
@@ -101,10 +109,13 @@ def get_documents(collection_name: str) -> list[Document]:
 
 
 @mcp.tool_or_resource("document://{document_id}", name="Get Document")
-def get_document(document_id: int) -> Document:
+def get_document(document_id: int) -> Document | Error:
     """Get a document from a collection"""
-    r = mcp.api.documents.get(document_id=document_id)
-    return Document.from_pydantic(r)
+    try:
+        r = mcp.api.documents.get(document_id=document_id)
+        return Document.from_pydantic(r)
+    except APIError as e:
+        return Error(error=e.__class__.__name__, message=e.message)
 
 
 @mcp.tool()
@@ -112,6 +123,13 @@ def query(query: str, collection: str | None = None) -> list[Document]:
     """Search Hyperspell for documents and data"""
     r = mcp.api.query.search(query=query, collections=collection)
     return Document.from_pydantic(r.documents)
+
+
+@mcp.tool()
+def add(url: str, collection: str | None = None) -> DocumentStatus:
+    """Add a file or URL to Hyperspell"""
+    r = mcp.api.documents.add_url(url=url, collection=collection)
+    return DocumentStatus.from_pydantic(r)
 
 
 def main():
