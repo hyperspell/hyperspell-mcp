@@ -6,7 +6,7 @@ from typing import Callable, Literal
 
 import anyio
 from dotenv import load_dotenv
-from hyperspell import APIError, Hyperspell
+from hyperspell import Hyperspell
 from mcp.server.fastmcp import FastMCP
 from pydantic import BaseModel, Field, field_validator
 
@@ -17,6 +17,9 @@ logger = logging.getLogger("hyperspell_mcp")
 
 class ServerConfig(BaseModel):
     use_resources: bool = False
+    collection: str | None = Field(
+        default_factory=lambda: os.getenv("HYPERSPELL_COLLECTION")
+    )
     use_tools: bool = True
     api_key: str = Field(default_factory=lambda: os.getenv("HYPERSPELL_TOKEN", ""))
 
@@ -77,7 +80,7 @@ class HyperspellMCPServer(FastMCP):
                     mime_type="application/json",
                 )(fn)
             if self.config.use_tools:
-                self.add_tool(fn)
+                self.add_tool(fn, name=name, description=description)
             return fn
 
         return decorator
@@ -111,24 +114,43 @@ def get_documents(collection_name: str) -> list[Document]:
 @mcp.tool_or_resource("document://{document_id}", name="Get Document")
 def get_document(document_id: int) -> Document | Error:
     """Get a document from a collection"""
-    try:
-        r = mcp.api.documents.get(document_id=document_id)
-        return Document.from_pydantic(r)
-    except APIError as e:
-        return Error(error=e.__class__.__name__, message=e.message)
+    # try:
+    r = mcp.api.documents.get(document_id=document_id)
+    return Document.from_pydantic(r)
+    # except APIError as e:
+    # return Error(error=e.__class__.__name__, message=e.message)
 
 
-@mcp.tool()
-def query(query: str, collection: str | None = None) -> list[Document]:
-    """Search Hyperspell for documents and data"""
-    r = mcp.api.query.search(query=query, collections=collection)
+@mcp.tool(
+    name="Search Hyperspell", description="Search Hyperspell for documents and data."
+)
+def query(query: str) -> list[Document]:
+    """Search Hyperspell for documents and data."""
+    r = mcp.api.query.search(query=query, collections=mcp.config.collection)
     return Document.from_pydantic(r.documents)
 
 
-@mcp.tool()
-def add(url: str, collection: str | None = None) -> DocumentStatus:
-    """Add a file or URL to Hyperspell"""
-    r = mcp.api.documents.add_url(url=url, collection=collection)
+@mcp.tool(
+    name="Add File", description="Add a file or website from a URL to Hyperspell."
+)
+def add_file(url: str) -> DocumentStatus:
+    """Add a file or URL to Hyperspell."""
+    r = mcp.api.documents.add_url(url=url, collection=mcp.config.collection)
+    return DocumentStatus.from_pydantic(r)
+
+
+@mcp.tool(
+    name="Add Memory",
+    description="Add a plain text document or memory to Hyperspell.",
+)
+def add_memory(text: str, title: str | None = None) -> DocumentStatus:
+    """Add a plain text document or memory to Hyperspell."""
+    r = mcp.api.documents.add(
+        text=text,
+        collection=mcp.config.collection,
+        title=title,
+        source="mcp",
+    )
     return DocumentStatus.from_pydantic(r)
 
 

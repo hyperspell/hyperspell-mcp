@@ -2,6 +2,7 @@
 
 - `HYPERSPELL_TOKEN` should be a valid user or app token (refer to the [Hyperspell docs](https://docs.hyperspell.com/) for how to obtain a user token).
 - Some MCP clients don't support resources well (looking at you, Claude Desktop), so we can expose them as tools instead. Set `HYPERSPELL_USE_RESOURCES` to `false` (default) to expose everything as tools, `true` to expose retrieveing single documents or listing collections as resources instead, or `both` if you want it all.
+- Optionally, set `HYPERSPELL_COLLECTION` to the name of the collection you want to query and add data to. If not set, it will use the user's default collection instead.
 
 
 ## Claude Desktop
