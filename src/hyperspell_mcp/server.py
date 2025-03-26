@@ -146,10 +146,7 @@ def add_file(url: str) -> DocumentStatus:
 def add_memory(text: str, title: str | None = None) -> DocumentStatus:
     """Add a plain text document or memory to Hyperspell."""
     r = mcp.api.documents.add(
-        text=text,
-        collection=mcp.config.collection,
-        title=title,
-        source="mcp",
+        text=text, collection=mcp.config.collection, title=title, source="mcp"
     )
     return DocumentStatus.from_pydantic(r)
 

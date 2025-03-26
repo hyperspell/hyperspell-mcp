@@ -5,8 +5,8 @@ description = "Hyperspell MCP Server"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "hyperspell>=0.8.1",
-    "mcp[cli]>=1.4.1",
+    "hyperspell>=0.8.2",
+    "mcp[cli]>=1.5.0",
 ]
 
 [[project.authors]]

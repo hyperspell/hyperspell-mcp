@@ -45,5 +45,5 @@ HYPERSPELL_USE_RESOURCES=true
 Then run this to start the inspector:
 
 ```
-uv run mcp dev hyperspell_mcp/server.py
+uv run mcp dev src/hyperspell_mcp/server.py
 ```
