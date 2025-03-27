@@ -9,13 +9,14 @@ startCommand:
     properties:
       hyperspellToken:
         type: string
-        description: User or app token for Hyperspell
+        description: "User or app token for Hyperspell"
       collection:
         type: string
-        description: Collection to use for the MCP. If not provided, the default collection will be used.
+        description: "Collection to use for the MCP. If not provided, the default collection will be used."
       useResources:
         type: string
-        description: 'false' to expose resources as tools, 'true' (default) to expose them as resources, 'both' to expose both
+        description: "'false' to expose resources as tools, 'true' (default) to expose them as resources, 'both' to expose both"
+        default: "true"
   commandFunction:
     # A function that produces the CLI command to start the MCP on stdio.
     |-
