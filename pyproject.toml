@@ -1,6 +1,6 @@
 [project]
 name = "hyperspell_mcp"
-version = "0.1.0"
+version = "0.2.1"
 description = "Hyperspell MCP Server"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -13,8 +13,12 @@ dependencies = [
 name = "Manu Ebert"
 email = "manu@hyperspell.com"
 
+[project.urls]
+Homepage = "https://www.hyperspell.com"
+Issues = "https://github.com/hyperspell/hyperspell-mcp/issues"
+
 [project.scripts]
-server = "hyperspell_mcp.server:main"
+hyperspell_mcp = "hyperspell_mcp:main"
 
 [build-system]
 requires = ["pdm-backend"]

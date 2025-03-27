@@ -4,7 +4,6 @@ import os
 import sys
 from typing import Callable, Literal
 
-import anyio
 from dotenv import load_dotenv
 from hyperspell import Hyperspell
 from mcp.server.fastmcp import FastMCP
@@ -39,7 +38,7 @@ class ServerConfig(BaseModel):
         # Expose resources or tools?
         # Some MCP clients don't support resources well (looking at you, Claude Desktop),
         # so we can expose them as tools instead.
-        tools_or_resources = os.getenv("HYPERSPELL_USE_RESOURCES", "false").lower()
+        tools_or_resources = os.getenv("HYPERSPELL_USE_RESOURCES", "true").lower()
         use_resources = tools_or_resources in ("true", "1", "both")
         use_tools = tools_or_resources in ("false", "0", "both")
 
@@ -58,7 +57,7 @@ class ServerConfig(BaseModel):
 
 class HyperspellMCPServer(FastMCP):
     def __init__(self, config: ServerConfig, **kwargs):
-        super().__init__(**kwargs)
+        super().__init__(**kwargs, dependencies=["hyperspell", "mcp[cli]"])
         self.config = config
         self.api = Hyperspell(api_key=config.api_key)
 
@@ -152,7 +151,7 @@ def add_memory(text: str, title: str | None = None) -> DocumentStatus:
 
 
 def main():
-    anyio.run(mcp.run_stdio_async)
+    mcp.run()
 
 
 if __name__ == "__main__":
