@@ -62,9 +62,9 @@ class HyperspellMCPServer(FastMCP):
         self.api = Hyperspell(api_key=config.api_key)
 
         if config.use_tools and config.use_resources:
-            print("Hyperspell MCP Server initialized using tools AND resources")
+            logger.info("Hyperspell MCP Server initialized using tools AND resources")
         else:
-            print(
+            logger.info(
                 f"Hyperspell MCP Server initialized using {'tools' if config.use_tools else 'resources'}"
             )
 
@@ -151,7 +151,8 @@ def add_memory(text: str, title: str | None = None) -> DocumentStatus:
 
 
 def main():
-    mcp.run()
+    mcp.run(transport="stdio")
+    logger.info("Server exited")
 
 
 if __name__ == "__main__":
