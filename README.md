@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/hyperspell-hyperspell-mcp-badge.png)](https://mseep.ai/app/hyperspell-hyperspell-mcp)
+
 ## Configuration
 
 - `HYPERSPELL_TOKEN` should be a valid user or app token (refer to the [Hyperspell docs](https://docs.hyperspell.com/) for how to obtain a user token).
