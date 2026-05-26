@@ -38,7 +38,7 @@ class ServerConfig(BaseModel):
         # Expose resources or tools?
         # Some MCP clients don't support resources well (looking at you, Claude Desktop),
         # so we can expose them as tools instead.
-        tools_or_resources = os.getenv("HYPERSPELL_USE_RESOURCES", "true").lower()
+        tools_or_resources = os.getenv("HYPERSPELL_USE_RESOURCES", "false").lower()
         use_resources = tools_or_resources in ("true", "1", "both")
         use_tools = tools_or_resources in ("false", "0", "both")
 
@@ -96,21 +96,21 @@ class HyperspellMCPServer(FastMCP):
 mcp = HyperspellMCPServer(config=ServerConfig.from_env())
 
 
-@mcp.tool_or_resource("collection://", name="List Collections")
+@mcp.tool_or_resource("collection://", name="list_collections")
 def list_collections() -> list[Collection]:
     """Get a list of all collections on Hyperspell"""
     r = mcp.api.collections.list()
     return Collection.from_pydantic(r.items)
 
 
-@mcp.tool_or_resource("collection://{collection_name}", name="Get Collection")
+@mcp.tool_or_resource("collection://{collection_name}", name="get_collection")
 def get_documents(collection_name: str) -> list[Document]:
     """Get a list of all documents in a collection"""
     r = mcp.api.documents.list(collection=collection_name)
     return Document.from_pydantic(r.items)
 
 
-@mcp.tool_or_resource("document://{document_id}", name="Get Document")
+@mcp.tool_or_resource("document://{document_id}", name="get_document")
 def get_document(document_id: int) -> Document | Error:
     """Get a document from a collection"""
     # try:
@@ -121,7 +121,7 @@ def get_document(document_id: int) -> Document | Error:
 
 
 @mcp.tool(
-    name="Search Hyperspell", description="Search Hyperspell for documents and data."
+    name="search_hyperspell", description="Search Hyperspell for documents and data."
 )
 def query(query: str) -> list[Document]:
     """Search Hyperspell for documents and data."""
@@ -130,7 +130,7 @@ def query(query: str) -> list[Document]:
 
 
 @mcp.tool(
-    name="Add File", description="Add a file or website from a URL to Hyperspell."
+    name="add_file", description="Add a file or website from a URL to Hyperspell."
 )
 def add_file(url: str) -> DocumentStatus:
     """Add a file or URL to Hyperspell."""
@@ -139,7 +139,7 @@ def add_file(url: str) -> DocumentStatus:
 
 
 @mcp.tool(
-    name="Add Memory",
+    name="add_memory",
     description="Add a plain text document or memory to Hyperspell.",
 )
 def add_memory(text: str, title: str | None = None) -> DocumentStatus:
